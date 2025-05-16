@@ -1,28 +1,35 @@
 package com.lcwd.game.turf.GameTurf.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import org.hibernate.annotations.GenericGenerator;
+
 import java.time.LocalTime;
 import java.util.List;
-
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-@ToString
 
 @Entity
 @Table(name = "game_slots")
 public class GameSlot {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    private String id;
 
+    @NotBlank(message = "Slot name cannot be empty")
     private String slotName;
+
+    @NotNull(message = "Start time is required")
     private LocalTime startTime;
+
+    @NotNull(message = "End time is required")
     private LocalTime endTime;
+
     private boolean isBooked;
 
     @ManyToOne
@@ -31,4 +38,100 @@ public class GameSlot {
 
     @OneToMany(mappedBy = "gameSlot", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<GameSlotPlayer> gameSlotPlayers;  // Many-to-Many through GameSlotPlayer
+
+    @ManyToOne
+    @JoinColumn(name = "turf_id", nullable = false)
+    private Turf turf;
+
+    public GameSlot() {
+    }
+
+    public GameSlot(String id, String slotName, LocalTime startTime, LocalTime endTime, boolean isBooked, Game game, List<GameSlotPlayer> gameSlotPlayers, Turf turf) {
+        this.id = id;
+        this.slotName = slotName;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.isBooked = isBooked;
+        this.game = game;
+        this.gameSlotPlayers = gameSlotPlayers;
+        this.turf = turf;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getSlotName() {
+        return slotName;
+    }
+
+    public void setSlotName(String slotName) {
+        this.slotName = slotName;
+    }
+
+    public LocalTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalTime endTime) {
+        this.endTime = endTime;
+    }
+
+    public boolean isBooked() {
+        return isBooked;
+    }
+
+    public void setBooked(boolean booked) {
+        isBooked = booked;
+    }
+
+    public Game getGame() {
+        return game;
+    }
+
+    public void setGame(Game game) {
+        this.game = game;
+    }
+
+    public List<GameSlotPlayer> getGameSlotPlayers() {
+        return gameSlotPlayers;
+    }
+
+    public void setGameSlotPlayers(List<GameSlotPlayer> gameSlotPlayers) {
+        this.gameSlotPlayers = gameSlotPlayers;
+    }
+
+    public Turf getTurf() {
+        return turf;
+    }
+
+    public void setTurf(Turf turf) {
+        this.turf = turf;
+    }
+
+    @Override
+    public String toString() {
+        return "GameSlot{" +
+                "id='" + id + '\'' +
+                ", slotName='" + slotName + '\'' +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", isBooked=" + isBooked +
+                ", game=" + game +
+                ", gameSlotPlayers=" + gameSlotPlayers +
+                ", turf=" + turf +
+                '}';
+    }
 }

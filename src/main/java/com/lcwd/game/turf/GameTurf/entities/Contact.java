@@ -80,7 +80,7 @@ public class Contact {
         this.player = player;
     }
 
-    // Add a static Builder class
+    // static Builder class
     public static class Builder {
         private String id;
         private String primaryContact;

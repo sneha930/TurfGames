@@ -70,7 +70,7 @@ public class PlayerDto {
         this.address = address;
     }
 
-    // ✅ MANUAL BUILDER CLASS
+    // BUILDER CLASS
     public static class Builder {
         private String id;
         private String name;

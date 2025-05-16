@@ -1,6 +1,5 @@
 package com.lcwd.game.turf.GameTurf.entities;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -9,8 +8,8 @@ import org.hibernate.annotations.GenericGenerator;
 import java.util.List;
 
 @Entity
-@Table(name = "Games")
-public class Game {
+@Table(name = "turf")
+public class Turf {
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -24,22 +23,26 @@ public class Game {
     @Size(min = 2, max = 50, message = "Name must be between 2 to 50 characters")
     private String name;
 
-    @NotBlank(message = "Description is required")
-    @Size(min = 2, max = 200)
+    private String address;
+
     private String description;
 
-    // Bidirectional Mapping
-    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
-    private List<GameSlot> gameSlots;
+    @OneToMany(mappedBy = "turf", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<GameSlot> gameSlot;
 
-    public Game(String id, String name, String description, List<GameSlot> gameSlots) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.gameSlots = gameSlots;
+    @OneToMany(mappedBy = "turf", cascade = CascadeType.ALL ,orphanRemoval = true)
+    private List<TurfSize> turfSize;
+
+    public Turf() {
     }
 
-    public Game() {
+    public Turf(String id, String name, String address, String description, List<GameSlot> gameSlot, List<TurfSize> turfSize) {
+        this.id = id;
+        this.name = name;
+        this.address = address;
+        this.description = description;
+        this.gameSlot = gameSlot;
+        this.turfSize = turfSize;
     }
 
     public String getId() {
@@ -58,6 +61,14 @@ public class Game {
         this.name = name;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -66,21 +77,31 @@ public class Game {
         this.description = description;
     }
 
-    public List<GameSlot> getGameSlots() {
-        return gameSlots;
+    public List<GameSlot> getGameSlot() {
+        return gameSlot;
     }
 
-    public void setGameSlots(List<GameSlot> gameSlots) {
-        this.gameSlots = gameSlots;
+    public void setGameSlot(List<GameSlot> gameSlot) {
+        this.gameSlot = gameSlot;
+    }
+
+    public List<TurfSize> getTurfSize() {
+        return turfSize;
+    }
+
+    public void setTurfSize(List<TurfSize> turfSize) {
+        this.turfSize = turfSize;
     }
 
     @Override
     public String toString() {
-        return "Game{" +
+        return "Turf{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
+                ", address='" + address + '\'' +
                 ", description='" + description + '\'' +
-                ", gameSlots=" + gameSlots +
+                ", gameSlot=" + gameSlot +
+                ", turfSize=" + turfSize +
                 '}';
     }
 }

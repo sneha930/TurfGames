@@ -6,21 +6,20 @@ import com.lcwd.game.turf.GameTurf.dtos.PlayerDto;
 import com.lcwd.game.turf.GameTurf.entities.Address;
 import com.lcwd.game.turf.GameTurf.entities.Contact;
 import com.lcwd.game.turf.GameTurf.entities.Player;
+import com.lcwd.game.turf.GameTurf.exceptions.ResouceNotFoundException;
 import com.lcwd.game.turf.GameTurf.repositories.PlayerRepository;
 import com.lcwd.game.turf.GameTurf.services.PlayerService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class PlayerServiceImpl implements PlayerService {
 
     @Autowired
     private PlayerRepository playerRepository;
-
 
     // create player
     @Override
@@ -39,6 +38,32 @@ public class PlayerServiceImpl implements PlayerService {
         return entityToDto(player);
     }
 
+//    update player
+    @Override
+    public PlayerDto updatePlayer(PlayerDto playerDto, String playerId) {
+
+        // get player of given id
+        Player player = playerRepository.findById(playerId).orElseThrow(() -> new ResouceNotFoundException("Player not found with given id"));
+
+        // update player
+        player.setName(playerDto.getName());
+        player.setDob(playerDto.getDob());
+        player.setAddress(dtoToAddress(playerDto.getAddress()));
+        player.setContact(dtoToContact(playerDto.getContact()));
+
+        Player updatedPlayer = playerRepository.save(player);
+
+        return entityToDto(updatedPlayer);
+    }
+
+//    search player
+    @Override
+    public List<PlayerDto> searchPlayer(String keyword) {
+        List<Player> players = playerRepository.findByNameContaining(keyword);
+        List<PlayerDto> playerDtoList = players.stream().map(player -> entityToDto(player)).collect(Collectors.toList());
+        return playerDtoList;
+    }
+
     // get all players
     @Override
     public List<PlayerDto> getAllPlayers() {
@@ -49,11 +74,20 @@ public class PlayerServiceImpl implements PlayerService {
         return playerDtoList;
     }
 
+//    get player by id
     @Override
     public PlayerDto getPlayerById(String playerId) {
-        Player player = playerRepository.findById(playerId).orElseThrow(() -> new RuntimeException("Player not found with given id"));
+        Player player = playerRepository.findById(playerId).orElseThrow(() -> new ResouceNotFoundException("Player not found with given id"));
         return entityToDto(player);
     }
+
+//    delete specific player
+    public void deletePlayer(String playerId) {
+        Player player = playerRepository.findById(playerId).orElseThrow(() -> new ResouceNotFoundException("Player not found with given id"));
+        playerRepository.delete(player);
+    }
+
+
 
     private PlayerDto entityToDto(Player player) {
 
