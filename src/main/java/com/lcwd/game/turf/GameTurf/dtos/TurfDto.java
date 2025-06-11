@@ -21,18 +21,15 @@ public class TurfDto {
 
     public List<TurfSizeDto> turfSize;
 
-    public  List<GameSlotDto> gameSlot;
-
     public TurfDto() {
     }
 
-    public TurfDto(String id, String name, String address, String description, List<TurfSizeDto> turfSize, List<GameSlotDto> gameSlot) {
+    public TurfDto(String id, String name, String address, String description, List<TurfSizeDto> turfSize) {
         this.id = id;
         this.name = name;
         this.address = address;
         this.description = description;
         this.turfSize = turfSize;
-        this.gameSlot = gameSlot;
     }
 
     public String getId() {
@@ -75,25 +72,6 @@ public class TurfDto {
         this.turfSize = turfSize;
     }
 
-    public List<GameSlotDto> getGameSlot() {
-        return gameSlot;
-    }
-
-    public void setGameSlot(List<GameSlotDto> gameSlot) {
-        this.gameSlot = gameSlot;
-    }
-
-    @Override
-    public String toString() {
-        return "TurfDto{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", address='" + address + '\'' +
-                ", description='" + description + '\'' +
-                ", turfSize=" + turfSize +
-                ", gameSlot=" + gameSlot +
-                '}';
-    }
 
     // Builder Class
     public static class Builder {
@@ -102,7 +80,6 @@ public class TurfDto {
         private String address;
         private String description;
         private List<TurfSizeDto> turfSize;
-        private List<GameSlotDto> gameSlot;
 
         public Builder id(String id) {
             this.id = id;
@@ -129,13 +106,19 @@ public class TurfDto {
             return this;
         }
 
-        public Builder gameSlot(List<GameSlotDto> gameSlot) {
-            this.gameSlot = gameSlot;
-            return this;
-        }
-
         public TurfDto build() {
-            return new TurfDto(id, name, address, description, turfSize, gameSlot);
+            return new TurfDto(id, name, address, description, turfSize);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "TurfDto{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", address='" + address + '\'' +
+                ", description='" + description + '\'' +
+                ", turfSize=" + turfSize +
+                '}';
     }
 }

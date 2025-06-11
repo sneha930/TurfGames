@@ -1,5 +1,6 @@
 package com.lcwd.game.turf.GameTurf.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -23,9 +24,9 @@ public class Address {
 
     // Bidirectional mapping
     @OneToOne(mappedBy = "address")
-    private Player player;
+    private User user;
 
-    public Address(String id, String line1, String line2, String city, String state, String country, String pincode, Player player) {
+    public Address(String id, String line1, String line2, String city, String state, String country, String pincode, User user) {
         this.id = id;
         this.line1 = line1;
         this.line2 = line2;
@@ -33,7 +34,7 @@ public class Address {
         this.state = state;
         this.country = country;
         this.pincode = pincode;
-        this.player = player;
+        this.user = user;
     }
 
     public Address() {
@@ -95,12 +96,12 @@ public class Address {
         this.pincode = pincode;
     }
 
-    public Player getPlayer() {
-        return player;
+    public User getUser() {
+        return user;
     }
 
-    public void setPlayer(Player player) {
-        this.player = player;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     // Builder class
@@ -112,7 +113,7 @@ public class Address {
         private String state;
         private String country;
         private String pincode;
-        private Player player;
+        private User user;
 
         public Builder id(String id) {
             this.id = id;
@@ -149,13 +150,15 @@ public class Address {
             return this;
         }
 
-        public Builder player(Player player) {
-            this.player = player;
+
+
+        public Builder user(User user) {
+            this.user = user;
             return this;
         }
 
         public Address build() {
-            return new Address(id, line1, line2, city, state, country, pincode, player);
+            return new Address(id, line1, line2, city, state, country, pincode, user);
         }
     }
 
@@ -169,7 +172,7 @@ public class Address {
                 ", state='" + state + '\'' +
                 ", country='" + country + '\'' +
                 ", pincode='" + pincode + '\'' +
-                ", player=" + player +
+                ", player=" + user +
                 '}';
     }
 }

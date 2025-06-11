@@ -1,3 +1,4 @@
+/*
 package com.lcwd.game.turf.GameTurf.controllers;
 
 import com.lcwd.game.turf.GameTurf.dtos.ApiResponseMessage;
@@ -35,7 +36,7 @@ public class PlayerController {
     @PutMapping("/{playerId}")
     public  ResponseEntity<PlayerDto> updatePlayer(@RequestBody PlayerDto playerDto, @PathVariable String playerId) {
         PlayerDto playerDto1 = playerService.updatePlayer(playerDto, playerId);
-        return  new ResponseEntity<>(playerDto1, HttpStatus.CREATED);
+        return  new ResponseEntity<>(playerDto1, HttpStatus.OK);
     }
 
 
@@ -63,3 +64,4 @@ public class PlayerController {
     //    serve player image
 
 }
+*/

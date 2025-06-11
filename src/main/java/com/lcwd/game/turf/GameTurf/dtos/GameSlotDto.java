@@ -5,29 +5,28 @@ import java.util.List;
 
 public class GameSlotDto {
 
-    private String id;
-    private String slotName;
-    private LocalTime startTime;
-    private LocalTime endTime;
-    private boolean isBooked;
+    public String id;
+    public String slotName;
+    public LocalTime startTime;
+    public LocalTime endTime;
+    public boolean isBooked;
 
-    private GameDto game;
-    private List<GameSlotPlayerDto> gameSlotPlayers;
-    private TurfDto turf;
+    public GameDto game;
+    public List<PlayerDto> playerDtos;
+    public TurfSizeDto turfSizeDto;
 
     public GameSlotDto() {
     }
 
-    public GameSlotDto(String id, String slotName, LocalTime startTime, LocalTime endTime, boolean isBooked,
-                       GameDto game, List<GameSlotPlayerDto> gameSlotPlayers, TurfDto turf) {
+    public GameSlotDto(String id, String slotName, LocalTime startTime, LocalTime endTime, boolean isBooked, GameDto game, List<PlayerDto> playerDtos, TurfSizeDto turfSizeDto) {
         this.id = id;
         this.slotName = slotName;
         this.startTime = startTime;
         this.endTime = endTime;
         this.isBooked = isBooked;
         this.game = game;
-        this.gameSlotPlayers = gameSlotPlayers;
-        this.turf = turf;
+        this.playerDtos = playerDtos;
+        this.turfSizeDto = turfSizeDto;
     }
 
     // Getters and Setters
@@ -79,21 +78,22 @@ public class GameSlotDto {
         this.game = game;
     }
 
-    public List<GameSlotPlayerDto> getGameSlotPlayers() {
-        return gameSlotPlayers;
+    public List<PlayerDto> getPlayerDtos() {
+        return playerDtos;
     }
 
-    public void setGameSlotPlayers(List<GameSlotPlayerDto> gameSlotPlayers) {
-        this.gameSlotPlayers = gameSlotPlayers;
+    public void setPlayerDtos(List<PlayerDto> playerDtos) {
+        this.playerDtos = playerDtos;
     }
 
-    public TurfDto getTurf() {
-        return turf;
+    public TurfSizeDto getTurfSizeDto() {
+        return turfSizeDto;
     }
 
-    public void setTurf(TurfDto turf) {
-        this.turf = turf;
+    public void setTurfSizeDto(TurfSizeDto turfSizeDto) {
+        this.turfSizeDto = turfSizeDto;
     }
+
 
     @Override
     public String toString() {
@@ -104,8 +104,8 @@ public class GameSlotDto {
                 ", endTime=" + endTime +
                 ", isBooked=" + isBooked +
                 ", game=" + game +
-                ", gameSlotPlayers=" + gameSlotPlayers +
-                ", turf=" + turf +
+                ", Players=" + playerDtos +
+                ", turfSizeDto=" + turfSizeDto +
                 '}';
     }
 
@@ -117,8 +117,8 @@ public class GameSlotDto {
         private LocalTime endTime;
         private boolean isBooked;
         private GameDto game;
-        private List<GameSlotPlayerDto> gameSlotPlayers;
-        private TurfDto turf;
+        private List<PlayerDto> playerDtos;
+        private TurfSizeDto turfSizeDto;
 
         public Builder id(String id) {
             this.id = id;
@@ -150,18 +150,18 @@ public class GameSlotDto {
             return this;
         }
 
-        public Builder gameSlotPlayers(List<GameSlotPlayerDto> players) {
-            this.gameSlotPlayers = players;
+        public Builder gameSlotPlayers(List<PlayerDto> players) {
+            this.playerDtos = players;
             return this;
         }
 
-        public Builder turf(TurfDto turf) {
-            this.turf = turf;
+        public Builder turfSizeDto(TurfSizeDto turfSizeDto) {
+            this.turfSizeDto = turfSizeDto;
             return this;
         }
 
         public GameSlotDto build() {
-            return new GameSlotDto(id, slotName, startTime, endTime, isBooked, game, gameSlotPlayers, turf);
+            return new GameSlotDto(id, slotName, startTime, endTime, isBooked, game, playerDtos, turfSizeDto);
         }
     }
 }

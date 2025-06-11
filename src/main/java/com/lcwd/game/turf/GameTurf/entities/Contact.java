@@ -1,5 +1,6 @@
 package com.lcwd.game.turf.GameTurf.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -23,21 +24,17 @@ public class Contact {
     private String emergencyContact;
 
     @OneToOne(mappedBy = "contact")
-    private Player player;
+    private User user;
 
-    public Contact(String id, String primaryContact, String homeContact, String emergencyContact, Player player) {
+    public Contact(String id, String primaryContact, String homeContact, String emergencyContact, User user) {
         this.id = id;
         this.primaryContact = primaryContact;
         this.homeContact = homeContact;
         this.emergencyContact = emergencyContact;
-        this.player = player;
+        this.user = user;
     }
 
     public Contact() {
-    }
-
-    public Contact(String id, String primaryContact, String homeContact, String emergencyContact) {
-
     }
 
     public String getId() {
@@ -72,12 +69,12 @@ public class Contact {
         this.emergencyContact = emergencyContact;
     }
 
-    public Player getPlayer() {
-        return player;
+    public User getUser() {
+        return user;
     }
 
-    public void setPlayer(Player player) {
-        this.player = player;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     // static Builder class
@@ -86,7 +83,7 @@ public class Contact {
         private String primaryContact;
         private String homeContact;
         private String emergencyContact;
-        private Player player;
+        private User user;
 
         public Builder id(String id) {
             this.id=id;
@@ -108,13 +105,13 @@ public class Contact {
             return this;
         }
 
-        public Builder player(Player player) {
-            this.player = player;
+        public Builder user(User user) {
+            this.user = user;
             return this;
         }
 
         public Contact build() {
-            return new Contact(id, primaryContact, homeContact, emergencyContact);
+            return new Contact(id, primaryContact, homeContact, emergencyContact, user);
         }
     }
 
@@ -125,7 +122,7 @@ public class Contact {
                 ", primaryContact='" + primaryContact + '\'' +
                 ", homeContact='" + homeContact + '\'' +
                 ", emergencyContact='" + emergencyContact + '\'' +
-                ", player=" + player +
+                ", user=" + user +
                 '}';
     }
 }

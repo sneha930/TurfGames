@@ -1,3 +1,4 @@
+
 package com.lcwd.game.turf.GameTurf.services.impl;
 
 import com.lcwd.game.turf.GameTurf.dtos.AddressDto;
@@ -6,13 +7,17 @@ import com.lcwd.game.turf.GameTurf.dtos.PlayerDto;
 import com.lcwd.game.turf.GameTurf.entities.Address;
 import com.lcwd.game.turf.GameTurf.entities.Contact;
 import com.lcwd.game.turf.GameTurf.entities.Player;
+import com.lcwd.game.turf.GameTurf.entities.User;
 import com.lcwd.game.turf.GameTurf.exceptions.ResouceNotFoundException;
 import com.lcwd.game.turf.GameTurf.repositories.PlayerRepository;
 import com.lcwd.game.turf.GameTurf.services.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,6 +27,7 @@ public class PlayerServiceImpl implements PlayerService {
     private PlayerRepository playerRepository;
 
     // create player
+    @Transactional
     @Override
     public PlayerDto createPlayer(PlayerDto playerDto) {
         //  generate unique id in string format
@@ -30,15 +36,13 @@ public class PlayerServiceImpl implements PlayerService {
 
         // dto -> entity
         Player player = dtoToEntity(playerDto);
-        Contact contact = dtoToContact(playerDto.getContact());
-        player.setContact(contact);
-        player.setAddress(dtoToAddress(playerDto.getAddress()));
         player = playerRepository.save(player);
         // entity -> dto
         return entityToDto(player);
     }
 
 //    update player
+    @Transactional
     @Override
     public PlayerDto updatePlayer(PlayerDto playerDto, String playerId) {
 
@@ -46,10 +50,6 @@ public class PlayerServiceImpl implements PlayerService {
         Player player = playerRepository.findById(playerId).orElseThrow(() -> new ResouceNotFoundException("Player not found with given id"));
 
         // update player
-        player.setName(playerDto.getName());
-        player.setDob(playerDto.getDob());
-        player.setAddress(dtoToAddress(playerDto.getAddress()));
-        player.setContact(dtoToContact(playerDto.getContact()));
 
         Player updatedPlayer = playerRepository.save(player);
 
@@ -59,9 +59,10 @@ public class PlayerServiceImpl implements PlayerService {
 //    search player
     @Override
     public List<PlayerDto> searchPlayer(String keyword) {
-        List<Player> players = playerRepository.findByNameContaining(keyword);
-        List<PlayerDto> playerDtoList = players.stream().map(player -> entityToDto(player)).collect(Collectors.toList());
-        return playerDtoList;
+        //List<Player> players = playerRepository.findByNameContaining(keyword);
+        //List<PlayerDto> playerDtoList = players.stream().map(player -> entityToDto(player)).collect(Collectors.toList());
+        return null
+                ;
     }
 
     // get all players
@@ -89,26 +90,26 @@ public class PlayerServiceImpl implements PlayerService {
 
 
 
-    private PlayerDto entityToDto(Player player) {
+    public PlayerDto entityToDto(Player player) {
 
-        PlayerDto playerDto = new PlayerDto.Builder()
-                .id(player.getId())
-                .name(player.getName())
-                .dob(player.getDob())
-                .contact(contactToDto(player.getContact()))
-                .address(addressToDto(player.getAddress())) // Updated
-                .build();
+        PlayerDto playerDto = new PlayerDto();
+        playerDto.setId(player.getId());
         return playerDto;
     }
 
-    private Player dtoToEntity(PlayerDto playerDto) {
+    //here
+    public Player dtoToEntity(PlayerDto playerDto) {
 
-        Player player = new Player(
-                playerDto.getId(),
-                playerDto.getName(), playerDto.getDob(),
-                dtoToAddress(playerDto.getAddress()),dtoToContact(playerDto.getContact()));
+        Player player = new Player();
+        if(!Objects.isNull(playerDto.getUserSignUpResponseDto()))
+        {
+            User user = new User();
+            user.setName(playerDto.getUserSignUpResponseDto().getName());
+            user.setDob(playerDto.getUserSignUpResponseDto().getDob());
+        }
         return player;
     }
+/*
 
     private ContactDto contactToDto(Contact contact) {
         if (contact == null) return null;
@@ -119,6 +120,7 @@ public class PlayerServiceImpl implements PlayerService {
                 .emergencyContact(contact.getEmergencyContact())
                 .build();
     }
+*/
 
     // Convert ContactDto to Contact entity
     private Contact dtoToContact(ContactDto contactDto) {
@@ -137,6 +139,10 @@ public class PlayerServiceImpl implements PlayerService {
         return contact;
     }
 
+    public Optional<Player> getById(String id) {
+        return playerRepository.findById(id);
+    }
+/*
     private AddressDto addressToDto(Address address) {
         if (address == null) return null;
         return new AddressDto.Builder()
@@ -161,6 +167,5 @@ public class PlayerServiceImpl implements PlayerService {
                 .country(addressDto.getCountry())
                 .pincode(addressDto.getPincode())
                 .build();
-    }
+    }*/
 }
-

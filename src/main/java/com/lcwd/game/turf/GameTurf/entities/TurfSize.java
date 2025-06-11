@@ -1,9 +1,12 @@
 package com.lcwd.game.turf.GameTurf.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import org.hibernate.annotations.GenericGenerator;
+
+import java.util.List;
 
 @Entity
 @Table(name = "turf_size")
@@ -22,6 +25,9 @@ public class TurfSize {
 
     @Positive(message = "Capacity must be a positive number")
     private int capacity;
+
+    @OneToMany(mappedBy = "turfSize", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<GameSlot> gameSlot;
 
     @ManyToOne
     @JoinColumn(name = "turf_id")
@@ -59,13 +65,22 @@ public class TurfSize {
         this.turf = turf;
     }
 
+    public List<GameSlot> getGameSlot() {
+        return gameSlot;
+    }
+
+    public void setGameSlot(List<GameSlot> gameSlot) {
+        this.gameSlot = gameSlot;
+    }
+
     public TurfSize() {
     }
 
-    public TurfSize(String id, String sizeName, int capacity, Turf turf) {
-        id = id;
+    public TurfSize(String id, String sizeName, int capacity, List<GameSlot> gameSlot, Turf turf) {
+        this.id = id;
         this.sizeName = sizeName;
         this.capacity = capacity;
+        this.gameSlot = gameSlot;
         this.turf = turf;
     }
 
@@ -75,6 +90,7 @@ public class TurfSize {
                 "id='" + id + '\'' +
                 ", sizeName='" + sizeName + '\'' +
                 ", capacity=" + capacity +
+                ", gameSlot=" + gameSlot +
                 ", turf=" + turf +
                 '}';
     }

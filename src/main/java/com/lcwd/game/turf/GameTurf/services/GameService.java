@@ -18,4 +18,5 @@ public interface GameService {
     GameDto getGameById(String gameId);
 
     void deleteGame(String gameId);
+
 }

@@ -36,25 +36,30 @@ public class GameSlot {
     @JoinColumn(name = "game_id", nullable = false)
     private Game game;
 
-    @OneToMany(mappedBy = "gameSlot", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<GameSlotPlayer> gameSlotPlayers;  // Many-to-Many through GameSlotPlayer
+    @ManyToMany
+    @JoinTable(
+            name = "game_slot_players",
+            joinColumns = @JoinColumn(name = "game_slot_id"),
+            inverseJoinColumns = @JoinColumn(name = "player_id")
+    )
+    private List<Player> players;
 
     @ManyToOne
-    @JoinColumn(name = "turf_id", nullable = false)
-    private Turf turf;
+    @JoinColumn(name = "turfSize_id", nullable = true)
+    private TurfSize turfSize;
 
     public GameSlot() {
     }
 
-    public GameSlot(String id, String slotName, LocalTime startTime, LocalTime endTime, boolean isBooked, Game game, List<GameSlotPlayer> gameSlotPlayers, Turf turf) {
+    public GameSlot(String id, String slotName, LocalTime startTime, LocalTime endTime, boolean isBooked, Game game, List<Player> players, TurfSize turfSize) {
         this.id = id;
         this.slotName = slotName;
         this.startTime = startTime;
         this.endTime = endTime;
         this.isBooked = isBooked;
         this.game = game;
-        this.gameSlotPlayers = gameSlotPlayers;
-        this.turf = turf;
+        this.players = players;
+        this.turfSize = turfSize;
     }
 
     public String getId() {
@@ -105,20 +110,20 @@ public class GameSlot {
         this.game = game;
     }
 
-    public List<GameSlotPlayer> getGameSlotPlayers() {
-        return gameSlotPlayers;
+    public List<Player> getPlayers() {
+        return players;
     }
 
-    public void setGameSlotPlayers(List<GameSlotPlayer> gameSlotPlayers) {
-        this.gameSlotPlayers = gameSlotPlayers;
+    public void setPlayers(List<Player> players) {
+        this.players = players;
     }
 
-    public Turf getTurf() {
-        return turf;
+    public TurfSize getTurfSize() {
+        return turfSize;
     }
 
-    public void setTurf(Turf turf) {
-        this.turf = turf;
+    public void setTurfSize(TurfSize turfSize) {
+        this.turfSize = turfSize;
     }
 
     @Override
@@ -130,8 +135,8 @@ public class GameSlot {
                 ", endTime=" + endTime +
                 ", isBooked=" + isBooked +
                 ", game=" + game +
-                ", gameSlotPlayers=" + gameSlotPlayers +
-                ", turf=" + turf +
+                ", players=" + players +
+                ", turfSize=" + turfSize +
                 '}';
     }
 }

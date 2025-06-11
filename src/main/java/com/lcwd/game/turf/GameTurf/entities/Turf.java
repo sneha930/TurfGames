@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.GenericGenerator;
-
 import java.util.List;
 
 @Entity
@@ -27,21 +26,17 @@ public class Turf {
 
     private String description;
 
-    @OneToMany(mappedBy = "turf", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<GameSlot> gameSlot;
-
     @OneToMany(mappedBy = "turf", cascade = CascadeType.ALL ,orphanRemoval = true)
     private List<TurfSize> turfSize;
 
     public Turf() {
     }
 
-    public Turf(String id, String name, String address, String description, List<GameSlot> gameSlot, List<TurfSize> turfSize) {
+    public Turf(String id, String name, String address, String description, List<TurfSize> turfSize) {
         this.id = id;
         this.name = name;
         this.address = address;
         this.description = description;
-        this.gameSlot = gameSlot;
         this.turfSize = turfSize;
     }
 
@@ -77,14 +72,6 @@ public class Turf {
         this.description = description;
     }
 
-    public List<GameSlot> getGameSlot() {
-        return gameSlot;
-    }
-
-    public void setGameSlot(List<GameSlot> gameSlot) {
-        this.gameSlot = gameSlot;
-    }
-
     public List<TurfSize> getTurfSize() {
         return turfSize;
     }
@@ -100,7 +87,6 @@ public class Turf {
                 ", name='" + name + '\'' +
                 ", address='" + address + '\'' +
                 ", description='" + description + '\'' +
-                ", gameSlot=" + gameSlot +
                 ", turfSize=" + turfSize +
                 '}';
     }
