@@ -4,7 +4,6 @@ import com.lcwd.game.turf.GameTurf.dtos.*;
 import com.lcwd.game.turf.GameTurf.entities.*;
 import com.lcwd.game.turf.GameTurf.repositories.GameRepository;
 import com.lcwd.game.turf.GameTurf.repositories.GameSlotRepository;
-import com.lcwd.game.turf.GameTurf.repositories.PlayerRepository;
 import com.lcwd.game.turf.GameTurf.repositories.TurfSizeRepository;
 import com.lcwd.game.turf.GameTurf.services.GameSlotService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,35 +35,65 @@ public class GameSlotServiceImpl implements GameSlotService {
     @Override
     public GameSlotDto createGameSlot(GameSlotDto gameSlotDto) {
 
+//        Fetch Game and TurfSize by their IDs from DB
         Optional<Game> gameOptional = gameRespository.findById(gameSlotDto.getGame().getId());
         Optional<TurfSize> turfSizeOptional = turfSizeRepository.findById(gameSlotDto.getTurfSizeDto().getId());
 
         GameSlot gameSlot = gameSlotDtoToEntity(gameSlotDto);
+
+//        Set the game and turfSize.
         gameSlot.setTurfSize(turfSizeOptional.get());
         gameSlot.setGame(gameOptional.get());
+
         GameSlot savedGameSlot = (GameSlot) gameSlotRepository.save(gameSlot);
         return gameSlotEntityToDto(savedGameSlot);
     }
 
+    // update game slot
     @Override
     public GameSlotDto updateGameSlot(GameSlotDto gameSlotDto) {
-        GameSlot gameSlot = gameSlotRepository.findById(gameSlotDto.getId()).get();
-        List<Player> players = new ArrayList<>();
-        if(!Objects.isNull(gameSlotDto.getPlayerDtos())) {
+//        Fetch existing GameSlot by ID.
+        GameSlot gameSlot = gameSlotRepository.findById(gameSlotDto.getId()).orElseThrow(() -> new RuntimeException("GameSlot not found with ID: " + gameSlotDto.getId()));
+
+        // Set Players ✅
+        List<Player> updatedPlayers = new ArrayList<>();
+
+//        check If players are passed
+        if (gameSlotDto.getPlayerDtos() != null) {
+//            check for player IDs
             for (PlayerDto playerDto : gameSlotDto.getPlayerDtos()) {
-                players.add(playerServiceImpl.dtoToEntity(playerDto));
+                if (playerDto.getId() == null) {
+                    throw new RuntimeException("Player ID is missing in request");
+                }
+
+                // check if player present with given id
+                Optional<Player> playerOpt = playerServiceImpl.getById(playerDto.getId());
+                if (playerOpt.isEmpty()) {
+                    throw new RuntimeException("Player not found with ID: " + playerDto.getId());
+                }
+
+//                add player in updated player list that we created
+                updatedPlayers.add(playerOpt.get());
             }
         }
-        players.addAll(gameSlot.getPlayers());
+        if(!Objects.isNull(gameSlot.getPlayers()) && !gameSlot.getPlayers().isEmpty()){
+            for(Player player: gameSlot.getPlayers()){
+                ListIterator<Player> iterator = updatedPlayers.listIterator();
+                while(iterator.hasNext()){
+                    if(iterator.next().getId().equals(player.getId())){
+                        iterator.remove();
+                    }
+                }
+            }
+            gameSlot.getPlayers().addAll(updatedPlayers);
+        }else{
+            gameSlot.setPlayers(updatedPlayers);
+        }
 
-        //removing duplicate players
-        List<Player> uniquePlayers = gameSlot.getPlayers().stream()
-                .collect(collectingAndThen(toCollection(() -> new TreeSet<>(comparing(Player::getId))), ArrayList::new));
-
-        gameSlot.setPlayers(uniquePlayers);
-        GameSlot savedGameSlot = (GameSlot) gameSlotRepository.save(gameSlot);
+        GameSlot savedGameSlot = gameSlotRepository.save(gameSlot);
         return gameSlotEntityToDto(savedGameSlot);
     }
+
 
     //    get all game slots
     @Override
@@ -81,6 +110,7 @@ public class GameSlotServiceImpl implements GameSlotService {
         gameSlotDto.setSlotName(savedGameSlot.getSlotName());
         gameSlotDto.setStartTime(savedGameSlot.getStartTime());
         gameSlotDto.setEndTime(savedGameSlot.getEndTime());
+        gameSlotDto.setDate(savedGameSlot.getDate());
         gameSlotDto.setBooked(savedGameSlot.isBooked());
 
         /*gameSlotDto.setGame(gameEntityToDto(savedGameSlot.getGame()));*/
@@ -91,8 +121,6 @@ public class GameSlotServiceImpl implements GameSlotService {
         gameDto.setDescription(savedGameSlot.getGame().getDescription());
         gameDto.setMinPlayers(savedGameSlot.getGame().getMinPlayers());
         gameDto.setMaxPlayers(savedGameSlot.getGame().getMaxPlayers());
-        gameDto.setCreatedBy(userEntityToUserSignUpResponseDto(savedGameSlot.getGame().getCreatedBy()));
-        gameDto.setCreatedAt(savedGameSlot.getGame().getCreatedAt());
 
         gameSlotDto.setGame(gameDto);
 
@@ -220,6 +248,7 @@ public class GameSlotServiceImpl implements GameSlotService {
         gameSlot.setSlotName(gameSlotDto.getSlotName());
         gameSlot.setStartTime(gameSlotDto.getStartTime());
         gameSlot.setEndTime(gameSlotDto.getEndTime());
+        gameSlot.setDate(gameSlotDto.getDate());
         gameSlot.setBooked(gameSlotDto.isBooked());
         gameSlot.setGame(gameDtoToEntity(gameSlotDto.getGame()));
 
@@ -335,9 +364,8 @@ public class GameSlotServiceImpl implements GameSlotService {
             game1.setName(game.getName());
             game1.setDescription(game.getDescription());
             game1.setMinPlayers(game.getMinPlayers());
-            game1.setMaxPlayers(game1.getMaxPlayers());
-            game1.setCreatedBy(game1.getCreatedBy());
-            game1.setCreatedAt(game1.getCreatedAt());
+            game1.setMaxPlayers(game.getMaxPlayers());
+            game1.setCreatedBy(game.getCreatedBy());
 
             if(!Objects.isNull(game.getGameSlotDtos()) && !game.getGameSlotDtos().isEmpty()) {
                 List<GameSlot> gameSlots = new ArrayList<>();

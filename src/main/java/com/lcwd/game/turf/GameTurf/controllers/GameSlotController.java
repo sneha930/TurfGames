@@ -20,14 +20,16 @@ public class GameSlotController {
     GameSlotService gameSlotService;
 
 //    create game slot
-    @PostMapping
+    @PostMapping("/create_slot")
     public ResponseEntity<GameSlotDto> createGameSlot(@RequestBody GameSlotDto gameSlotDto) {
         return new ResponseEntity<>(gameSlotService.createGameSlot(gameSlotDto), HttpStatus.CREATED);
     }
+
 //    update game slot
-    @PutMapping
-    public ResponseEntity<GameSlotDto> updateGameSlot(@RequestBody GameSlotDto gameSlotDto) {
-        return new ResponseEntity<>(gameSlotService.createGameSlot(gameSlotDto), HttpStatus.CREATED);
+    @PutMapping("/book_slot/{slotId}")
+    public ResponseEntity<GameSlotDto> updateGameSlot(@PathVariable String slotId, @RequestBody GameSlotDto gameSlotDto) {
+        gameSlotDto.setId(slotId);
+        return new ResponseEntity<>(gameSlotService.updateGameSlot(gameSlotDto), HttpStatus.CREATED);
     }
 
 //    get all game slots

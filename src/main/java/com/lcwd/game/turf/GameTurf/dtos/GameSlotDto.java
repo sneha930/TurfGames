@@ -1,5 +1,6 @@
 package com.lcwd.game.turf.GameTurf.dtos;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -9,6 +10,7 @@ public class GameSlotDto {
     public String slotName;
     public LocalTime startTime;
     public LocalTime endTime;
+    public LocalDate date;
     public boolean isBooked;
 
     public GameDto game;
@@ -18,11 +20,12 @@ public class GameSlotDto {
     public GameSlotDto() {
     }
 
-    public GameSlotDto(String id, String slotName, LocalTime startTime, LocalTime endTime, boolean isBooked, GameDto game, List<PlayerDto> playerDtos, TurfSizeDto turfSizeDto) {
+    public GameSlotDto(String id, String slotName, LocalTime startTime, LocalTime endTime, LocalDate date, boolean isBooked, GameDto game, List<PlayerDto> playerDtos, TurfSizeDto turfSizeDto) {
         this.id = id;
         this.slotName = slotName;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.date = date;
         this.isBooked = isBooked;
         this.game = game;
         this.playerDtos = playerDtos;
@@ -94,6 +97,9 @@ public class GameSlotDto {
         this.turfSizeDto = turfSizeDto;
     }
 
+    public LocalDate getDate() {return date;}
+
+    public void setDate(LocalDate date) {this.date = date;}
 
     @Override
     public String toString() {
@@ -102,10 +108,12 @@ public class GameSlotDto {
                 ", slotName='" + slotName + '\'' +
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
+                ", date=" + date +
                 ", isBooked=" + isBooked +
                 ", game=" + game +
-                ", Players=" + playerDtos +
+                ", playerDtos=" + playerDtos +
                 ", turfSizeDto=" + turfSizeDto +
+                ", date=" + date +
                 '}';
     }
 
@@ -115,6 +123,7 @@ public class GameSlotDto {
         private String slotName;
         private LocalTime startTime;
         private LocalTime endTime;
+        private LocalDate date;
         private boolean isBooked;
         private GameDto game;
         private List<PlayerDto> playerDtos;
@@ -140,6 +149,11 @@ public class GameSlotDto {
             return this;
         }
 
+        public Builder date(LocalDate date) {
+            this.date = date;
+            return this;
+        }
+
         public Builder isBooked(boolean isBooked) {
             this.isBooked = isBooked;
             return this;
@@ -161,7 +175,7 @@ public class GameSlotDto {
         }
 
         public GameSlotDto build() {
-            return new GameSlotDto(id, slotName, startTime, endTime, isBooked, game, playerDtos, turfSizeDto);
+            return new GameSlotDto(id, slotName, startTime, endTime, date, isBooked, game, playerDtos, turfSizeDto);
         }
     }
 }

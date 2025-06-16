@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -68,10 +69,23 @@ public class UserServiceImpl implements UserService {
         userSignUpResponseDto.setEmailId(user.getEmailId());
         userSignUpResponseDto.setDob(user.getDob());
         userSignUpResponseDto.setRole(user.getRole());
+
+        Player player = playerRepository.findPlayerByUserId(user.getId()).orElseThrow(() -> new RuntimeException("Player not found with given userId"));
+        if(player != null) {
+            userSignUpResponseDto.setPlayerDto(entityToPlayerDto(player));
+        }
+
         userSignUpResponseDto.setAddress(entityToAddressDto(user.getAddress()));
         userSignUpResponseDto.setContact(entityToContactDto(user.getContact()));
 
         return  userSignUpResponseDto;
+    }
+
+    private PlayerDto entityToPlayerDto(Player player) {
+        PlayerDto playerDto = new PlayerDto();
+        playerDto.setId(player.getId());
+
+        return playerDto;
     }
 
     private ContactDto entityToContactDto(Contact contact) {
@@ -133,14 +147,36 @@ public class UserServiceImpl implements UserService {
 
     //signin
     @Override
-    public UserSignInResponseDto signin(UserSignInRequestDto userSignInRequestDto) {
+    public UserSignUpResponseDto signin(UserSignInRequestDto userSignInRequestDto) {
         User user = userRepository.findByEmailId(userSignInRequestDto.getEmailId()).orElseThrow(() -> new RuntimeException("User not found with email: " + userSignInRequestDto.getEmailId()));
         if(!user.getPassword().equals(userSignInRequestDto.getPassword())) {
             throw new RuntimeException("Incorrect password");
         }
 
-        return entityToUserSignInResponseDto(user);
+        return entityToUserSignUpResponseDto(user);
     }
+
+    @Override
+    public List<UserSignUpResponseDto> getUsersByRole() {
+        // Only these two roles should be shown
+        List<User.Role> allowedRoles = List.of(
+                User.Role.PLAYER,
+                User.Role.PLAYERADMIN   // <-- make sure the enum name is correct!
+        );
+
+        List<User> users = userRepository.findByRoleIn(allowedRoles);
+
+        return users.stream()
+                .map(this::entityToUserSignUpResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public UserSignUpResponseDto getUserByEmailId(String emailId) {
+        User user = userRepository.findByEmailId(emailId).orElseThrow(() -> new RuntimeException("User not found with emailId: "+ emailId));
+        return entityToUserSignUpResponseDto(user);
+    }
+
 
     // getAllUsers
     @Override

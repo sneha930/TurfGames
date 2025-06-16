@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 @CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
 
@@ -21,9 +21,9 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/signin")
-    public ResponseEntity<UserSignInResponseDto> signin(@RequestBody UserSignInRequestDto userSignInRequestDto) {
+    public ResponseEntity<UserSignUpResponseDto> signin(@RequestBody UserSignInRequestDto userSignInRequestDto) {
         try {
-            UserSignInResponseDto loggedInUser = userService.signin(userSignInRequestDto);
+            UserSignUpResponseDto loggedInUser = userService.signin(userSignInRequestDto);
             return ResponseEntity.ok(loggedInUser);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
@@ -32,13 +32,27 @@ public class UserController {
 
     @PostMapping("/signup")
     public ResponseEntity<UserSignUpResponseDto> signup(@RequestBody UserSignUpRequestDto userSignUpRequestDto) {
+        System.out.println("Received DTO: " + userSignUpRequestDto);
         return new ResponseEntity<>(userService.signup(userSignUpRequestDto), HttpStatus.CREATED);
     }
 
 
-    @GetMapping
+    // get all users
+    @GetMapping("/get_all_users")
     public ResponseEntity<List<UserSignUpResponseDto>> getAllUsers() {
         return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
+    }
+
+    // get users by role
+    @GetMapping("/get_users_by_role")
+    public  ResponseEntity<List<UserSignUpResponseDto>> getUsersByRole() {
+        return new ResponseEntity<>(userService.getUsersByRole(), HttpStatus.OK);
+    }
+
+    // get user by emailId
+    @GetMapping("/get_user_by_emailid/{emailId}")
+    public ResponseEntity<UserSignUpResponseDto> getUserByEmailId(@PathVariable String emailId) {
+        return new ResponseEntity<>(userService.getUserByEmailId(emailId), HttpStatus.OK);
     }
 
 }

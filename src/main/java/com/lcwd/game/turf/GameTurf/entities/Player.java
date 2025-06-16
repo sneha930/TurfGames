@@ -27,16 +27,18 @@ public class Player {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    /*@OneToMany(mappedBy = "player", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Game> games;*/
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "player_id") // creates FK in Game table
+    private List<Game> games;
 
     public Player() {
     }
 
-    public Player(String id, List<GameSlot> gameSlots, User user) {
+    public Player(String id, List<GameSlot> gameSlots, User user, List<Game> games) {
         this.id = id;
         this.gameSlots = gameSlots;
         this.user = user;
+        this.games = games;
     }
 
     public String getId() {
@@ -63,12 +65,21 @@ public class Player {
         this.user = user;
     }
 
+    public List<Game> getGames() {
+        return games;
+    }
+
+    public void setGames(List<Game> games) {
+        this.games = games;
+    }
+
     @Override
     public String toString() {
         return "Player{" +
                 "id='" + id + '\'' +
-                ", gameSlotPlayers=" + gameSlots +
+                ", gameSlots=" + gameSlots +
                 ", user=" + user +
+                ", games=" + games +
                 '}';
     }
 }

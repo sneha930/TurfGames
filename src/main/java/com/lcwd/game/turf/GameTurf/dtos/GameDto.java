@@ -1,6 +1,7 @@
 package com.lcwd.game.turf.GameTurf.dtos;
 
 import com.lcwd.game.turf.GameTurf.entities.GameSlot;
+import com.lcwd.game.turf.GameTurf.entities.User;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
@@ -29,21 +30,18 @@ public class GameDto {
 
     public int maxPlayers;
 
-    public LocalDate createdAt;
-
-    public UserSignUpResponseDto createdBy;
+    public User createdBy;
 
     public GameDto() {
     }
 
-    public GameDto(String id, String name, String description, List<GameSlotDto> gameSlotDtos, int minPlayers, int maxPlayers, LocalDate createdAt, UserSignUpResponseDto createdBy) {
+    public GameDto(String id, String name, String description, List<GameSlotDto> gameSlotDtos, int minPlayers, int maxPlayers, User createdBy) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.gameSlotDtos = gameSlotDtos;
         this.minPlayers = minPlayers;
         this.maxPlayers = maxPlayers;
-        this.createdAt = createdAt;
         this.createdBy = createdBy;
     }
 
@@ -95,19 +93,11 @@ public class GameDto {
         this.maxPlayers = maxPlayers;
     }
 
-    public LocalDate getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDate createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public UserSignUpResponseDto getCreatedBy() {
+    public User getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(UserSignUpResponseDto createdBy) {
+    public void setCreatedBy(User createdBy) {
         this.createdBy = createdBy;
     }
 
@@ -120,8 +110,7 @@ public class GameDto {
                 ", gameSlotDtos=" + gameSlotDtos +
                 ", minPlayers=" + minPlayers +
                 ", maxPlayers=" + maxPlayers +
-                ", createdAt=" + createdAt +
-                ", createdBy='" + createdBy + '\'' +
+                ", createdBy=" + createdBy +
                 '}';
     }
 }

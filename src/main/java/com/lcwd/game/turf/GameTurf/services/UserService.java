@@ -14,5 +14,9 @@ public interface UserService {
 
     List<UserSignUpResponseDto> getAllUsers();
 
-    UserSignInResponseDto signin(UserSignInRequestDto userSignInRequestDto);
+    UserSignUpResponseDto signin(UserSignInRequestDto userSignInRequestDto);
+
+    List<UserSignUpResponseDto> getUsersByRole();
+
+    UserSignUpResponseDto getUserByEmailId(String emailId);
 }

@@ -95,8 +95,6 @@ public class GameServiceImpl implements GameService {
             gameDto.setDescription(game.getDescription());
             gameDto.setMinPlayers(game.getMinPlayers());
             gameDto.setMaxPlayers(game.getMaxPlayers());
-            gameDto.setCreatedBy(userEntityToUserDto(game.getCreatedBy()));
-            gameDto.setCreatedAt(game.getCreatedAt());
 
             if (!Objects.isNull(game.getGameSlots()) && !game.getGameSlots().isEmpty()) {
 

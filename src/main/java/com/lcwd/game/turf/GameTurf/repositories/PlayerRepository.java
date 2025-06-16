@@ -12,4 +12,6 @@ public interface PlayerRepository extends JpaRepository<Player, String> {
    // List<Player> findByNameContaining(String keyword);
    @Override
    Optional<Player> findById(String string);
+
+   Optional<Player> findPlayerByUserId(String id);
 }

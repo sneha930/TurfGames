@@ -5,18 +5,22 @@ import com.lcwd.game.turf.GameTurf.entities.User;
 import java.time.LocalDate;
 
 public class UserSignUpResponseDto {
-    private String id;
-    private String name;
-    private String emailId;
-    private LocalDate dob;
-    private User.Role role;
-    private ContactDto contact;
-    private AddressDto address;
+
+    public String id;
+
+    public String name;
+    public String emailId;
+    public LocalDate dob;
+    public User.Role role;
+    public ContactDto contact;
+    public AddressDto address;
+    public PlayerDto playerDto;
+    public boolean isPlayer;
 
     public UserSignUpResponseDto() {
     }
 
-    public UserSignUpResponseDto(String id, String name, String emailId, LocalDate dob, User.Role role, ContactDto contact, AddressDto address) {
+    public UserSignUpResponseDto(String id, String name, String emailId, LocalDate dob, User.Role role, ContactDto contact, AddressDto address, PlayerDto playerDto, boolean isPlayer) {
         this.id = id;
         this.name = name;
         this.emailId = emailId;
@@ -24,6 +28,8 @@ public class UserSignUpResponseDto {
         this.role = role;
         this.contact = contact;
         this.address = address;
+        this.playerDto = playerDto;
+        this.isPlayer = isPlayer;
     }
 
     public String getId() {
@@ -80,5 +86,36 @@ public class UserSignUpResponseDto {
 
     public void setAddress(AddressDto address) {
         this.address = address;
+    }
+
+    public PlayerDto getPlayerDto() {
+        return playerDto;
+    }
+
+    public void setPlayerDto(PlayerDto playerDto) {
+        this.playerDto = playerDto;
+    }
+
+    public boolean isPlayer() {
+        return isPlayer;
+    }
+
+    public void setPlayer(boolean player) {
+        isPlayer = player;
+    }
+
+    @Override
+    public String toString() {
+        return "UserSignUpResponseDto{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", emailId='" + emailId + '\'' +
+                ", dob=" + dob +
+                ", role=" + role +
+                ", contact=" + contact +
+                ", address=" + address +
+                ", playerDto=" + playerDto +
+                ", isPlayer=" + isPlayer +
+                '}';
     }
 }

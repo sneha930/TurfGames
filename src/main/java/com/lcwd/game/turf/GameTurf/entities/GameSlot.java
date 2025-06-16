@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -30,6 +31,9 @@ public class GameSlot {
     @NotNull(message = "End time is required")
     private LocalTime endTime;
 
+    @NotNull(message = "Date is required")
+    private LocalDate date;
+
     private boolean isBooked;
 
     @ManyToOne
@@ -51,11 +55,12 @@ public class GameSlot {
     public GameSlot() {
     }
 
-    public GameSlot(String id, String slotName, LocalTime startTime, LocalTime endTime, boolean isBooked, Game game, List<Player> players, TurfSize turfSize) {
+    public GameSlot(String id, String slotName, LocalTime startTime, LocalTime endTime, LocalDate date, boolean isBooked, Game game, List<Player> players, TurfSize turfSize) {
         this.id = id;
         this.slotName = slotName;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.date = date;
         this.isBooked = isBooked;
         this.game = game;
         this.players = players;
@@ -126,6 +131,14 @@ public class GameSlot {
         this.turfSize = turfSize;
     }
 
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
     @Override
     public String toString() {
         return "GameSlot{" +
@@ -133,6 +146,7 @@ public class GameSlot {
                 ", slotName='" + slotName + '\'' +
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
+                ", date=" + date +
                 ", isBooked=" + isBooked +
                 ", game=" + game +
                 ", players=" + players +
