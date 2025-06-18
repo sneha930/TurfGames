@@ -36,6 +36,9 @@ public class User {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dob;
 
+//    A user has exactly one contact.
+//    This is a foreign key: contact_id is stored in the users table.
+//    Cascade + orphan removal: If user is deleted or contact is changed, the associated contact row is deleted/updated automatically.
     @OneToOne( cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name= "contact_id", referencedColumnName = "id")
     @NotNull(message = "Contact is required")
@@ -48,6 +51,7 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+//    This means: one user can create multiple games.
     @OneToMany(mappedBy = "createdBy")
     private List<Game> gamesCreated;
 

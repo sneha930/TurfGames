@@ -6,19 +6,21 @@ import java.util.List;
 
 public class PlayerDto {
 
-    private String id;
-    private List<GameSlotDto> gameSlotDtos;
-    private List<GameDto> gameDtos;
-    private UserSignUpResponseDto userSignUpResponseDto;
+    public String id;
+    public List<GameSlotDto> gameSlotDtos;
+    public List<GameDto> gameDtos;
+    public UserSignUpResponseDto userSignUpResponseDto;
+    public List<GameDto> favouriteGameDtos;
 
     public PlayerDto() {
     }
 
-    public PlayerDto(String id, List<GameSlotDto> gameSlotDtos, List<GameDto> gameDtos, UserSignUpResponseDto userSignUpResponseDto) {
+    public PlayerDto(String id, List<GameSlotDto> gameSlotDtos, List<GameDto> gameDtos, UserSignUpResponseDto userSignUpResponseDto, List<GameDto> favouriteGames) {
         this.id = id;
         this.gameSlotDtos = gameSlotDtos;
         this.gameDtos = gameDtos;
         this.userSignUpResponseDto = userSignUpResponseDto;
+        this.favouriteGameDtos = favouriteGameDtos;
     }
 
     public String getId() {
@@ -53,6 +55,14 @@ public class PlayerDto {
         this.gameDtos = gameDtos;
     }
 
+    public List<GameDto> getFavouriteGameDtos() {
+        return favouriteGameDtos;
+    }
+
+    public void setFavouriteGameDtos(List<GameDto> favouriteGameDtos) {
+        this.favouriteGameDtos = favouriteGameDtos;
+    }
+
     @Override
     public String toString() {
         return "PlayerDto{" +
@@ -60,6 +70,7 @@ public class PlayerDto {
                 ", gameSlotDtos=" + gameSlotDtos +
                 ", gameDtos=" + gameDtos +
                 ", userSignUpResponseDto=" + userSignUpResponseDto +
+                ", favouriteGameDtos=" + favouriteGameDtos +
                 '}';
     }
 }

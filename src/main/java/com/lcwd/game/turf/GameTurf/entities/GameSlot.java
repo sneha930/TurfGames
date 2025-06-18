@@ -36,6 +36,9 @@ public class GameSlot {
 
     private boolean isBooked;
 
+//    Many GameSlots belong to one Game.
+//    Example: A Football game can have multiple time slots.
+//    The game_id foreign key will be in the game_slots table.
     @ManyToOne
     @JoinColumn(name = "game_id", nullable = false)
     private Game game;
@@ -48,6 +51,8 @@ public class GameSlot {
     )
     private List<Player> players;
 
+//    Many GameSlots can be played on the same TurfSize.
+//    This is optional (nullable = true), so not all slots must have a turf size.
     @ManyToOne
     @JoinColumn(name = "turfSize_id", nullable = true)
     private TurfSize turfSize;

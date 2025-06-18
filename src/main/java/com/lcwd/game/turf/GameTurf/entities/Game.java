@@ -1,5 +1,6 @@
 package com.lcwd.game.turf.GameTurf.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -41,6 +42,7 @@ public class Game {
 
     @ManyToOne
     @JoinColumn(name = "created_by", nullable = false)  // DB column name to link to user ID
+    @JsonIgnore
     private User createdBy;
 
     @PrePersist

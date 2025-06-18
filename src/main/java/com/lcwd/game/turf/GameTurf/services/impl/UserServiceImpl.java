@@ -1,10 +1,8 @@
 package com.lcwd.game.turf.GameTurf.services.impl;
 
 import com.lcwd.game.turf.GameTurf.dtos.*;
-import com.lcwd.game.turf.GameTurf.entities.Address;
-import com.lcwd.game.turf.GameTurf.entities.Contact;
-import com.lcwd.game.turf.GameTurf.entities.Player;
-import com.lcwd.game.turf.GameTurf.entities.User;
+import com.lcwd.game.turf.GameTurf.entities.*;
+import com.lcwd.game.turf.GameTurf.repositories.GameRepository;
 import com.lcwd.game.turf.GameTurf.repositories.PlayerRepository;
 import com.lcwd.game.turf.GameTurf.repositories.UserRepository;
 import com.lcwd.game.turf.GameTurf.services.UserService;
@@ -24,6 +22,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private PlayerRepository playerRepository;
+
+    @Autowired
+    private GameRepository gameRepository;
 
     //    signup
     @Override
@@ -45,6 +46,7 @@ public class UserServiceImpl implements UserService {
 
             Player player1 = new Player();
             player1.setUser(user);
+
             // games and gameSlotPlayers will be empty initially
             playerRepository.save(player1);
         }
@@ -55,11 +57,39 @@ public class UserServiceImpl implements UserService {
 
             Player player = new Player();
             player.setUser(user);
+
+/*//            working
+//            first fetch list all of all id's in ids
+            List<String> ids = userSignUpRequestDto.getFavouriteGameIds();
+//            then pass ids
+            List<Game> favGames = gameRepository.findAllById(ids);
+            player.setFavouriteGames(favGames);*/
+
+            player.setFavouriteGames(gameDtoToGame(userSignUpRequestDto.getFavouriteGameDtos()));
+
             // games and gameSlotPlayers will be empty initially
             playerRepository.save(player);
         }
 
         return entityToUserSignUpResponseDto(user);
+    }
+
+    private List<Game> gameDtoToGame(List<GameDto> favouriteGameDtos) {
+        List<Game> games = favouriteGameDtos.stream()
+                .map(this::gameDtoToEntity).collect(Collectors.toList());
+
+        return games;
+    }
+
+    private Game gameDtoToEntity(GameDto gameDto) {
+        Game game = new Game();
+        game.setName(gameDto.getName());
+        game.setDescription(gameDto.getDescription());
+        game.setMinPlayers(gameDto.getMinPlayers());
+        game.setMaxPlayers(gameDto.getMaxPlayers());
+        game.setCreatedBy(gameDto.getCreatedBy());
+
+        return game;
     }
 
     private UserSignUpResponseDto entityToUserSignUpResponseDto(User user) {
@@ -70,15 +100,65 @@ public class UserServiceImpl implements UserService {
         userSignUpResponseDto.setDob(user.getDob());
         userSignUpResponseDto.setRole(user.getRole());
 
-        Player player = playerRepository.findPlayerByUserId(user.getId()).orElseThrow(() -> new RuntimeException("Player not found with given userId"));
-        if(player != null) {
-            userSignUpResponseDto.setPlayerDto(entityToPlayerDto(player));
+        /*if(user.getRole() ==  User.Role.PLAYER || user.getRole() == User.Role.PLAYERADMIN) {
+//            To avoid null checks and handle missing data cleanly
+            Optional<Player> playerOpt = playerRepository.findByUser_Id(user.getId());
+            if(playerOpt.isPresent()) {
+                Player player = playerOpt.get();
+                userSignUpResponseDto.setPlayerDto(entityToPlayerDto(player));
+
+                List<String> favGameIds = player.getFavouriteGames().stream()
+                        .map(Game::getId).collect(Collectors.toList());
+                userSignUpResponseDto.setFavouriteGameIds(favGameIds);
+            } else {
+                System.out.println("Player not found for userId: " + user.getId());
+            }
+        }*/
+
+        if(user.getRole() ==  User.Role.PLAYER || user.getRole() == User.Role.PLAYERADMIN) {
+//            To avoid null checks and handle missing data cleanly
+            Optional<Player> playerOpt = playerRepository.findByUser_Id(user.getId());
+            if(playerOpt.isPresent()) {
+                Player player = playerOpt.get();
+                userSignUpResponseDto.setPlayerDto(entityToPlayerDto(player));
+
+                // This ensures your frontend always receives:"favouriteGameDtos": [] instead of:"favouriteGameDtos": null
+                List<Game> favGames = player.getFavouriteGames() == null ? new ArrayList<>() : player.getFavouriteGames();
+                userSignUpResponseDto.setFavouriteGameDtos(gameEntityToDto(favGames));
+
+            } else {
+                System.out.println("Player not found for userId: " + user.getId());
+            }
         }
+
+//        Optional<Player> playerOpt = playerRepository.findByUser_Id(user.getId());
+//        if(playerOpt.isPresent()) {
+//            Player player = playerOpt.get();
+//            userSignUpResponseDto.setFavouriteGameDtos(gameEntityToDto(player.getFavouriteGames()));
+//        }
 
         userSignUpResponseDto.setAddress(entityToAddressDto(user.getAddress()));
         userSignUpResponseDto.setContact(entityToContactDto(user.getContact()));
 
         return  userSignUpResponseDto;
+    }
+
+    private List<GameDto> gameEntityToDto(List<Game> favouriteGames) {
+        if (favouriteGames == null) return new ArrayList<>();
+        return favouriteGames.stream()
+                .map(this::gameEntityToGameDto).collect(Collectors.toList());
+    }
+
+    private GameDto gameEntityToGameDto(Game game) {
+        GameDto gameDto = new GameDto();
+        gameDto.setId(game.getId());
+        gameDto.setName(game.getName());
+        gameDto.setDescription(game.getDescription());
+        gameDto.setMinPlayers(game.getMinPlayers());
+        gameDto.setMaxPlayers(game.getMaxPlayers());
+//        gameDto.setCreatedBy(game.getCreatedBy());
+
+        return gameDto;
     }
 
     private PlayerDto entityToPlayerDto(Player player) {

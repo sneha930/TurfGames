@@ -46,7 +46,9 @@ public class UserController {
     // get users by role
     @GetMapping("/get_users_by_role")
     public  ResponseEntity<List<UserSignUpResponseDto>> getUsersByRole() {
-        return new ResponseEntity<>(userService.getUsersByRole(), HttpStatus.OK);
+        List<UserSignUpResponseDto> dtos = userService.getUsersByRole();
+        System.out.println("Sending DTOs: " + dtos);
+        return ResponseEntity.ok(dtos);
     }
 
     // get user by emailId

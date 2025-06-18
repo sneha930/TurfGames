@@ -1,8 +1,10 @@
 package com.lcwd.game.turf.GameTurf.dtos;
 
+import com.lcwd.game.turf.GameTurf.entities.Game;
 import com.lcwd.game.turf.GameTurf.entities.User;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class UserSignUpResponseDto {
 
@@ -16,11 +18,12 @@ public class UserSignUpResponseDto {
     public AddressDto address;
     public PlayerDto playerDto;
     public boolean isPlayer;
+    public List<GameDto> favouriteGameDtos;
 
     public UserSignUpResponseDto() {
     }
 
-    public UserSignUpResponseDto(String id, String name, String emailId, LocalDate dob, User.Role role, ContactDto contact, AddressDto address, PlayerDto playerDto, boolean isPlayer) {
+    public UserSignUpResponseDto(String id, String name, String emailId, LocalDate dob, User.Role role, ContactDto contact, AddressDto address, PlayerDto playerDto, boolean isPlayer, List<GameDto> favouriteGameDtos) {
         this.id = id;
         this.name = name;
         this.emailId = emailId;
@@ -30,6 +33,7 @@ public class UserSignUpResponseDto {
         this.address = address;
         this.playerDto = playerDto;
         this.isPlayer = isPlayer;
+        this.favouriteGameDtos = favouriteGameDtos;
     }
 
     public String getId() {
@@ -104,6 +108,14 @@ public class UserSignUpResponseDto {
         isPlayer = player;
     }
 
+    public List<GameDto> getFavouriteGameDtos() {
+        return favouriteGameDtos;
+    }
+
+    public void setFavouriteGameDtos(List<GameDto> favouriteGameDtos) {
+        this.favouriteGameDtos = favouriteGameDtos;
+    }
+
     @Override
     public String toString() {
         return "UserSignUpResponseDto{" +
@@ -116,6 +128,7 @@ public class UserSignUpResponseDto {
                 ", address=" + address +
                 ", playerDto=" + playerDto +
                 ", isPlayer=" + isPlayer +
+                ", favouriteGameDtos=" + favouriteGameDtos +
                 '}';
     }
 }

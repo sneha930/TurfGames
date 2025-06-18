@@ -2,11 +2,13 @@ package com.lcwd.game.turf.GameTurf.dtos;
 
 import com.lcwd.game.turf.GameTurf.dtos.AddressDto;
 import com.lcwd.game.turf.GameTurf.dtos.ContactDto;
+import com.lcwd.game.turf.GameTurf.entities.Game;
 import com.lcwd.game.turf.GameTurf.entities.User;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class UserSignUpRequestDto {
 
@@ -41,11 +43,13 @@ public class UserSignUpRequestDto {
     public boolean isPlayer; // helper flag, set true if role is PLAYER or PLAYERADMIN
 
     // You can later add extra player fields here if needed
+    @NotNull(message = "Please enter favourite games")
+    public List<GameDto> favouriteGameDtos;
 
     public UserSignUpRequestDto() {
     }
 
-    public UserSignUpRequestDto(String name, String emailId, String password, LocalDate dob, User.Role role, ContactDto contactDto, AddressDto addressDto, boolean isPlayer) {
+    public UserSignUpRequestDto(String name, String emailId, String password, LocalDate dob, User.Role role, ContactDto contactDto, AddressDto addressDto, boolean isPlayer, List<GameDto> favouriteGameDtos) {
         this.name = name;
         this.emailId = emailId;
         this.password = password;
@@ -54,6 +58,7 @@ public class UserSignUpRequestDto {
         this.contactDto = contactDto;
         this.addressDto = addressDto;
         this.isPlayer = isPlayer;
+        this.favouriteGameDtos = favouriteGameDtos;
     }
 
     // Getters and setters
@@ -122,8 +127,13 @@ public class UserSignUpRequestDto {
         isPlayer = player;
     }
 
-    //    to string
+    public List<GameDto> getFavouriteGameDtos() {
+        return favouriteGameDtos;
+    }
 
+    public void setFavouriteGameDtos(List<GameDto> favouriteGameDtos) {
+        this.favouriteGameDtos = favouriteGameDtos;
+    }
 
     @Override
     public String toString() {
@@ -136,6 +146,7 @@ public class UserSignUpRequestDto {
                 ", contactDto=" + contactDto +
                 ", addressDto=" + addressDto +
                 ", isPlayer=" + isPlayer +
+                ", favouriteGameDtos=" + favouriteGameDtos +
                 '}';
     }
 }

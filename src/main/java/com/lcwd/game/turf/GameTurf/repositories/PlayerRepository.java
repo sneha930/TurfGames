@@ -1,10 +1,8 @@
 package com.lcwd.game.turf.GameTurf.repositories;
 
-import com.lcwd.game.turf.GameTurf.entities.Game;
 import com.lcwd.game.turf.GameTurf.entities.Player;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface PlayerRepository extends JpaRepository<Player, String> {
@@ -13,5 +11,5 @@ public interface PlayerRepository extends JpaRepository<Player, String> {
    @Override
    Optional<Player> findById(String string);
 
-   Optional<Player> findPlayerByUserId(String id);
+   Optional<Player> findByUser_Id(String id);
 }
