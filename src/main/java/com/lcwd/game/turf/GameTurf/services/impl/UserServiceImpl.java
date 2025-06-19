@@ -2,6 +2,7 @@ package com.lcwd.game.turf.GameTurf.services.impl;
 
 import com.lcwd.game.turf.GameTurf.dtos.*;
 import com.lcwd.game.turf.GameTurf.entities.*;
+import com.lcwd.game.turf.GameTurf.exceptions.ResourceNotFoundException;
 import com.lcwd.game.turf.GameTurf.repositories.GameRepository;
 import com.lcwd.game.turf.GameTurf.repositories.PlayerRepository;
 import com.lcwd.game.turf.GameTurf.repositories.UserRepository;
@@ -65,7 +66,17 @@ public class UserServiceImpl implements UserService {
             List<Game> favGames = gameRepository.findAllById(ids);
             player.setFavouriteGames(favGames);*/
 
-            player.setFavouriteGames(gameDtoToGame(userSignUpRequestDto.getFavouriteGameDtos()));
+//            player.setFavouriteGames(gameDtoToGame(userSignUpRequestDto.getFavouriteGameDtos()));
+            List<Game> favouriteGames = new ArrayList<>();
+            if (userSignUpRequestDto.getFavouriteGameDtos() != null) {
+                for (GameDto gameDto : userSignUpRequestDto.getFavouriteGameDtos()) {
+                    Game game = gameRepository.findById(gameDto.getId())
+                            .orElseThrow(() -> new ResourceNotFoundException("Game not found with ID: " + gameDto.getId()));
+                    favouriteGames.add(game);
+                }
+                player.setFavouriteGames(favouriteGames);
+            }
+
 
             // games and gameSlotPlayers will be empty initially
             playerRepository.save(player);
@@ -87,7 +98,7 @@ public class UserServiceImpl implements UserService {
         game.setDescription(gameDto.getDescription());
         game.setMinPlayers(gameDto.getMinPlayers());
         game.setMaxPlayers(gameDto.getMaxPlayers());
-        game.setCreatedBy(gameDto.getCreatedBy());
+//        game.setCreatedBy(gameDto.getCreatedBy());
 
         return game;
     }

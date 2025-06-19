@@ -8,7 +8,7 @@ import com.lcwd.game.turf.GameTurf.entities.Address;
 import com.lcwd.game.turf.GameTurf.entities.Contact;
 import com.lcwd.game.turf.GameTurf.entities.Player;
 import com.lcwd.game.turf.GameTurf.entities.User;
-import com.lcwd.game.turf.GameTurf.exceptions.ResouceNotFoundException;
+import com.lcwd.game.turf.GameTurf.exceptions.ResourceNotFoundException;
 import com.lcwd.game.turf.GameTurf.repositories.PlayerRepository;
 import com.lcwd.game.turf.GameTurf.services.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +47,7 @@ public class PlayerServiceImpl implements PlayerService {
     public PlayerDto updatePlayer(PlayerDto playerDto, String playerId) {
 
         // get player of given id
-        Player player = playerRepository.findById(playerId).orElseThrow(() -> new ResouceNotFoundException("Player not found with given id"));
+        Player player = playerRepository.findById(playerId).orElseThrow(() -> new ResourceNotFoundException("Player not found with given id"));
 
         // update player
 
@@ -78,13 +78,13 @@ public class PlayerServiceImpl implements PlayerService {
 //    get player by id
     @Override
     public PlayerDto getPlayerById(String playerId) {
-        Player player = playerRepository.findById(playerId).orElseThrow(() -> new ResouceNotFoundException("Player not found with given id"));
+        Player player = playerRepository.findById(playerId).orElseThrow(() -> new ResourceNotFoundException("Player not found with given id"));
         return entityToDto(player);
     }
 
 //    delete specific player
     public void deletePlayer(String playerId) {
-        Player player = playerRepository.findById(playerId).orElseThrow(() -> new ResouceNotFoundException("Player not found with given id"));
+        Player player = playerRepository.findById(playerId).orElseThrow(() -> new ResourceNotFoundException("Player not found with given id"));
         playerRepository.delete(player);
     }
 

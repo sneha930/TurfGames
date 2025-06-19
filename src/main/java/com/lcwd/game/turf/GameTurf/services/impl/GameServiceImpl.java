@@ -2,7 +2,7 @@ package com.lcwd.game.turf.GameTurf.services.impl;
 
 import com.lcwd.game.turf.GameTurf.dtos.*;
 import com.lcwd.game.turf.GameTurf.entities.*;
-import com.lcwd.game.turf.GameTurf.exceptions.ResouceNotFoundException;
+import com.lcwd.game.turf.GameTurf.exceptions.ResourceNotFoundException;
 import com.lcwd.game.turf.GameTurf.repositories.GameRepository;
 import com.lcwd.game.turf.GameTurf.repositories.UserRepository;
 import com.lcwd.game.turf.GameTurf.services.GameService;
@@ -57,7 +57,7 @@ public class GameServiceImpl implements GameService {
     @Override
     public GameDto updateGame(GameDto gameDto, String gameId) {
         Game existingGame = gameRepository.findById(gameId)
-                .orElseThrow(() -> new ResouceNotFoundException("Game not found with given id"));
+                .orElseThrow(() -> new ResourceNotFoundException("Game not found with given id"));
         existingGame.setName(gameDto.getName());
         existingGame.setDescription(gameDto.getDescription());
         List<GameSlot> updatedGameSlots = gameDto.getGameSlotDtos().stream()
@@ -72,7 +72,7 @@ public class GameServiceImpl implements GameService {
     @Override
     public void deleteGame(String gameId) {
         Game game = gameRepository.findById(gameId)
-                .orElseThrow(() -> new ResouceNotFoundException("Game not found with given id"));
+                .orElseThrow(() -> new ResourceNotFoundException("Game not found with given id"));
         gameRepository.delete(game);
     }
 
@@ -81,7 +81,7 @@ public class GameServiceImpl implements GameService {
     @Override
     public GameDto getGameById(String gameId) {
         Game game = gameRepository.findById(gameId)
-                .orElseThrow(() -> new ResouceNotFoundException("Game not found with given id"));
+                .orElseThrow(() -> new ResourceNotFoundException("Game not found with given id"));
         return gameEntityToDto(game);
     }
 
@@ -142,7 +142,7 @@ public class GameServiceImpl implements GameService {
             game.setCreatedAt(LocalDate.now());
 
             User user = userRepository.findById(gameDto.getCreatedBy().getId())
-                    .orElseThrow(() -> new ResouceNotFoundException("User not found with id"));
+                    .orElseThrow(() -> new ResourceNotFoundException("User not found with id"));
 
             game.setCreatedBy(user);
 
