@@ -101,22 +101,6 @@ public class GameSlotDto {
 
     public void setDate(LocalDate date) {this.date = date;}
 
-    @Override
-    public String toString() {
-        return "GameSlotDto{" +
-                "id='" + id + '\'' +
-                ", slotName='" + slotName + '\'' +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
-                ", date=" + date +
-                ", isBooked=" + isBooked +
-                ", game=" + game +
-                ", playerDtos=" + playerDtos +
-                ", turfSizeDto=" + turfSizeDto +
-                ", date=" + date +
-                '}';
-    }
-
     // Manual Builder Class
     public static class Builder {
         private String id;
@@ -177,5 +161,21 @@ public class GameSlotDto {
         public GameSlotDto build() {
             return new GameSlotDto(id, slotName, startTime, endTime, date, isBooked, game, playerDtos, turfSizeDto);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "GameSlotDto{" +
+                "id='" + id + '\'' +
+                ", slotName='" + slotName + '\'' +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", date=" + date +
+                ", isBooked=" + isBooked +
+                ", game=" + game +
+                ", playerDtos=" + playerDtos +
+                ", turfSizeDto=" + turfSizeDto +
+                ", date=" + date +
+                '}';
     }
 }

@@ -26,6 +26,9 @@ public class PlayerServiceImpl implements PlayerService {
     @Autowired
     private PlayerRepository playerRepository;
 
+    @Autowired
+    private UserServiceImpl userServiceImpl;
+
     // create player
     @Transactional
     @Override
@@ -94,6 +97,7 @@ public class PlayerServiceImpl implements PlayerService {
 
         PlayerDto playerDto = new PlayerDto();
         playerDto.setId(player.getId());
+        playerDto.setUserSignUpResponseDto(userServiceImpl.entityToUserSignUpResponseDto(player.getUser()));
         return playerDto;
     }
 

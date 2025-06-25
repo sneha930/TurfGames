@@ -1,5 +1,6 @@
 package com.lcwd.game.turf.GameTurf.repositories;
 
+import com.lcwd.game.turf.GameTurf.dtos.UserSignUpResponseDto;
 import com.lcwd.game.turf.GameTurf.entities.Player;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -12,4 +13,5 @@ public interface PlayerRepository extends JpaRepository<Player, String> {
    Optional<Player> findById(String string);
 
    Optional<Player> findByUser_Id(String id);
+
 }

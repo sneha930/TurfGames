@@ -4,6 +4,8 @@ import com.lcwd.game.turf.GameTurf.dtos.UserSignInRequestDto;
 import com.lcwd.game.turf.GameTurf.dtos.UserSignInResponseDto;
 import com.lcwd.game.turf.GameTurf.dtos.UserSignUpRequestDto;
 import com.lcwd.game.turf.GameTurf.dtos.UserSignUpResponseDto;
+import com.lcwd.game.turf.GameTurf.entities.User;
+import com.lcwd.game.turf.GameTurf.repositories.UserRepository;
 import com.lcwd.game.turf.GameTurf.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -44,11 +46,11 @@ public class UserController {
     }
 
     // get users by role
-    @GetMapping("/get_users_by_role")
-    public  ResponseEntity<List<UserSignUpResponseDto>> getUsersByRole() {
-        List<UserSignUpResponseDto> dtos = userService.getUsersByRole();
-        System.out.println("Sending DTOs: " + dtos);
-        return ResponseEntity.ok(dtos);
+    @GetMapping("/users/by_roles")
+    public  ResponseEntity<List<UserSignUpResponseDto>> getUsersByRole(@RequestParam List<User.Role> roles) {
+        List<UserSignUpResponseDto> users = userService.getUsersByRole(roles);
+        System.out.println("Sending users: " + users);
+        return ResponseEntity.ok(users);
     }
 
     // get user by emailId

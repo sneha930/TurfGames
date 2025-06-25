@@ -72,8 +72,18 @@ public class GameSlotServiceImpl implements GameSlotService {
                     throw new RuntimeException("Player not found with ID: " + playerDto.getId());
                 }
 
-//                add player in updated player list that we created
-                updatedPlayers.add(playerOpt.get());
+                Player playerToAdd = playerOpt.get();
+
+                // Check if the player is already in the existing gameSlot
+                boolean alreadyJoined = gameSlot.getPlayers() != null &&
+                        gameSlot.getPlayers().stream().anyMatch(p -> p.getId().equals(playerToAdd.getId()));
+
+                if (alreadyJoined) {
+                    throw new RuntimeException("Player with ID " + playerToAdd.getId() + " has already joined this slot!");
+                }
+
+                updatedPlayers.add(playerToAdd);
+
             }
         }
         if(!Objects.isNull(gameSlot.getPlayers()) && !gameSlot.getPlayers().isEmpty()){

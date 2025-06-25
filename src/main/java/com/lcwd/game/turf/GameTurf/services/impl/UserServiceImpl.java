@@ -48,6 +48,16 @@ public class UserServiceImpl implements UserService {
             Player player1 = new Player();
             player1.setUser(user);
 
+            List<Game> favGames = new ArrayList<>();
+            if (userSignUpRequestDto.getFavouriteGameDtos() != null) {
+                for (GameDto gameDto : userSignUpRequestDto.getFavouriteGameDtos()) {
+                    Game game = gameRepository.findById(gameDto.getId())
+                            .orElseThrow(() -> new ResourceNotFoundException("Game not found with ID: " + gameDto.getId()));
+                    favGames.add(game);
+                }
+                player1.setFavouriteGames(favGames);
+            }
+
             // games and gameSlotPlayers will be empty initially
             playerRepository.save(player1);
         }
@@ -103,13 +113,16 @@ public class UserServiceImpl implements UserService {
         return game;
     }
 
-    private UserSignUpResponseDto entityToUserSignUpResponseDto(User user) {
+    public UserSignUpResponseDto entityToUserSignUpResponseDto(User user) {
         UserSignUpResponseDto userSignUpResponseDto = new UserSignUpResponseDto();
         userSignUpResponseDto.setId(user.getId());
         userSignUpResponseDto.setName(user.getName());
         userSignUpResponseDto.setEmailId(user.getEmailId());
         userSignUpResponseDto.setDob(user.getDob());
         userSignUpResponseDto.setRole(user.getRole());
+
+        boolean isPlayer = user.getRole() == User.Role.PLAYER || user.getRole() == User.Role.PLAYERADMIN;
+        userSignUpResponseDto.setPlayer(isPlayer);
 
         /*if(user.getRole() ==  User.Role.PLAYER || user.getRole() == User.Role.PLAYERADMIN) {
 //            To avoid null checks and handle missing data cleanly
@@ -248,14 +261,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserSignUpResponseDto> getUsersByRole() {
-        // Only these two roles should be shown
-        List<User.Role> allowedRoles = List.of(
-                User.Role.PLAYER,
-                User.Role.PLAYERADMIN   // <-- make sure the enum name is correct!
-        );
+    public List<UserSignUpResponseDto> getUsersByRole(List<User.Role> roles) {
 
-        List<User> users = userRepository.findByRoleIn(allowedRoles);
+        List<User> users = userRepository.findByRoleIn(roles);
 
         return users.stream()
                 .map(this::entityToUserSignUpResponseDto)
